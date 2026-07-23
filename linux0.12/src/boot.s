@@ -28,11 +28,46 @@ start:
 
     ; 打印字符串 "Hello, OS!"
     mov si, hello_msg
-call print_string
+    call print_string
 
-    ; 死循环
-hang:
-    jmp hang
+    ; 打印提示信息
+    mov si, prompt_msg
+    call print_string
+
+    ; 键盘输入循环：读一个键，回显到屏幕
+key_loop:
+    call read_key        ; 等待按键
+    cmp al, 0x0D         ; 如果是回车
+    je key_newline
+    call put_char        ; 回显字符
+    jmp key_loop
+
+key_newline:
+    mov al, 0x0D
+    call put_char
+    mov al, 0x0A
+    call put_char
+    jmp key_loop
+
+; ============ 读键盘函数 ============
+; 返回: AL = ASCII 码, AH = 扫描码
+read_key:
+    mov ah, 0x00        ; INT 0x16, AH=00: 等待按键
+    int 0x16
+    ret
+
+; ============ 打印单个字符函数 ============
+; AL = 要打印的字符
+put_char:
+    push ax
+    push bx
+    mov ah, 0x0E
+    xor bh, bh
+    mov bl, 0x07
+    int 0x10
+    pop bx
+    pop ax
+    ret
 
 ; ============ 打印字符串函数 ============
 ; DS:SI 指向以 0 结尾的字符串
@@ -54,7 +89,8 @@ print_string:
     ret
 
 ; ============ 数据 ============
-hello_msg db 'Hello, OS!', 0xD, 0xA, 0
+hello_msg  db 'Hello, OS!', 0xD, 0xA, 0
+prompt_msg db 'Type something: ', 0
 
 ; ============ 填充到 512 字节，最后加启动标志 ============
 times 510 - ($ - $$) db 0   ; 填充 0 到 510 字节
