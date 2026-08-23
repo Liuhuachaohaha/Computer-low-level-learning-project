@@ -8,6 +8,55 @@ typedef struct BiTNode
     struct BiTNode *rchild;
 }BiTNode,*BiTree;
 
+// 队列结构定义（用于层次遍历）
+#define MAX_QUEUE_SIZE 100  // 队列最大容量
+
+typedef struct Queue
+{
+    BiTree data[MAX_QUEUE_SIZE];  // 存储二叉树节点指针
+    int front;  // 队头指针
+    int rear;   // 队尾指针
+}Queue;
+
+// 初始化队列
+void initQueue(Queue *q)
+{
+    q->front = 0;
+    q->rear = 0;
+}
+
+// 判断队列是否为空
+int isEmpty(Queue *q)
+{
+    return q->front == q->rear;
+}
+
+// 入队操作
+int enqueue(Queue *q, BiTree node)
+{
+    if ((q->rear + 1) % MAX_QUEUE_SIZE == q->front)
+    {
+        printf("队列已满！\n");
+        return 0;
+    }
+    q->data[q->rear] = node;
+    q->rear = (q->rear + 1) % MAX_QUEUE_SIZE;
+    return 1;
+}
+
+// 出队操作
+BiTree dequeue(Queue *q)
+{
+    if (isEmpty(q))
+    {
+        printf("队列为空！\n");
+        return NULL;
+    }
+    BiTree node = q->data[q->front];
+    q->front = (q->front + 1) % MAX_QUEUE_SIZE;
+    return node;
+}
+
 BiTNode* createNode(int val)
 {
     BiTNode* node=(BiTNode*)malloc(sizeof(BiTNode));
@@ -57,6 +106,27 @@ void postOrder(BiTree root)
     printf("%d ", *(root->data));   // 访问根节点
 }
 
+// 层次遍历（广度优先遍历）
+void levelOrder(BiTree root)
+{
+    if (root == NULL) return;
+    
+    Queue q;
+    initQueue(&q);
+    enqueue(&q, root);  // 根节点入队
+    
+    while (!isEmpty(&q))
+    {
+        BiTree node = dequeue(&q);  // 出队
+        printf("%d ", *(node->data));  // 访问节点
+        
+        if (node->lchild != NULL)   // 左孩子入队
+            enqueue(&q, node->lchild);
+        if (node->rchild != NULL)   // 右孩子入队
+            enqueue(&q, node->rchild);
+    }
+}
+
 void destroyTree(BiTree root)
 {
     if (root == NULL) return;
@@ -73,11 +143,17 @@ int main()
     printf("根节点右孩子：%d\n", *(root->rchild->data));
     printf("根节点左孩子的左孩子：%d\n", *(root->lchild->lchild->data));
     printf("根节点左孩子的左、右孩子：%d\n", *(root->lchild->rchild->data));
+    printf("前序遍历：");
     preOrder(root);
     printf("\n");
+    printf("中序遍历：");
     inOrder(root);
     printf("\n");
+    printf("后序遍历：");
     postOrder(root);
+    printf("\n");
+    printf("层次遍历：");
+    levelOrder(root);
     printf("\n");
     destroyTree(root);
     return 0;

@@ -1,4 +1,4 @@
-clang src/Tree/1.c -g -o bin/out
+clang src/sequentialList/1.c -g -o bin/out
 #cat << 'PASS'
 
 #╔══════════════════════════════════════════╗
