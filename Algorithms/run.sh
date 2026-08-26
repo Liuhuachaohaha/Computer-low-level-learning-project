@@ -1,4 +1,4 @@
-clang src/sequentialList/1.c -g -o bin/out
+clang src/singlelinkedlist/4082015.c -g -o bin/out
 #cat << 'PASS'
 
 #╔══════════════════════════════════════════╗
