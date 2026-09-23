@@ -1,4 +1,4 @@
-clang src/singlelinkedlist/4082015.c -g -o bin/out
+clang src/Tree/3.c -g -o bin/out
 #cat << 'PASS'
 
 #╔══════════════════════════════════════════╗

@@ -18,7 +18,7 @@ void initstack(stack* s,int capacity)
 void printstack(stack* s)
 {
     printf("stack: ");
-    for(int i=0;i<s->capacity;i++)
+    for(int i=0;i<s->top;i++)
     {
         printf("%d ",s->data[i]);
     }
@@ -104,6 +104,7 @@ int main()
     val=pop(&s);
     printf("pop %d\n",val);
     val=pop(&s);
+    printstack(&s);
     printf("pop %d\n",val);
     val=pop(&s);
     printf("pop %d\n",val);
@@ -117,4 +118,5 @@ int main()
     printf("pop %d\n",val);
     val=pop(&s);
     printf("pop %d\n",val);
+    printstack(&s);
 }
