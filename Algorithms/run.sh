@@ -1,4 +1,4 @@
-clang src/Tree/3.c -g -o bin/out
+clang src/string/1.c -g -o bin/out
 #cat << 'PASS'
 
 #╔══════════════════════════════════════════╗
